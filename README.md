@@ -2,14 +2,18 @@
 
 A research-backed interactive website that shows moving digital data on a modulated radio signal and explains the difference between carrier frequency and channel bandwidth.
 
-## Recommended repository name
+## Repository
 
-Use `radio-wave-data-visualizer`.
-
-That name is descriptive, lowercase, URL-safe, and specific enough that the GitHub Pages URL will make sense:
+This project is published from:
 
 ```text
-https://<your-github-username>.github.io/radio-wave-data-visualizer/
+https://github.com/UsamahMoin/Radio-wave-data-visualizer
+```
+
+The live GitHub Pages site is:
+
+```text
+https://usamahmoin.github.io/Radio-wave-data-visualizer/
 ```
 
 ## Features
@@ -40,7 +44,7 @@ You can also open `index.html` directly in a browser, but the local server match
 
 ## Publish on GitHub Pages
 
-1. Create a new public GitHub repository named `radio-wave-data-visualizer`.
+1. Create a new public GitHub repository.
 2. Upload or push these files to the repository root:
    - `.nojekyll`
    - `index.html`
@@ -54,7 +58,7 @@ You can also open `index.html` directly in a browser, but the local server match
 6. Save. GitHub will publish the site at:
 
 ```text
-https://<your-github-username>.github.io/radio-wave-data-visualizer/
+https://<your-github-username>.github.io/<repository-name>/
 ```
 
 GitHub Pages can take a minute or two to build the first time after you save the setting.
