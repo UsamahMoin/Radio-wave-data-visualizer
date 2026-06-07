@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Radio Wave Data Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>See how data changes a radio wave</h1>
+      <p class="lead">Type a message, watch its bits move through a modulated signal, and compare how channel bandwidth changes the amount of data a Wi-Fi link can move.</p>
+    </section>
+
+    <section class="panel controls" aria-label="Controls">
+      <div class="field field-wide">
+        <label for="message">Message</label>
+        <input id="message" type="text" value="Hi" autocomplete="off" placeholder="Type a message, for example: Hello" />
+        <p class="help">Text becomes binary bits. Those bits control the shape of the wave.</p>
+      </div>
+
+      <div class="field">
+        <label id="modeLabel">Modulation</label>
+        <div class="custom-select" id="modeSelect">
+          <button
+            id="modeButton"
+            class="select-trigger"
+            type="button"
+            aria-labelledby="modeLabel modeButtonText"
+            aria-haspopup="menu"
+            aria-expanded="false"
+          >
+            <span id="modeButtonText">ASK: amplitude changes</span>
+            <span class="select-chevron" aria-hidden="true"></span>
+          </button>
+          <div id="modeMenu" class="select-menu" role="menu" aria-labelledby="modeLabel" hidden>
+            <button class="select-option is-selected" type="button" role="menuitemradio" aria-checked="true" data-mode="ask">
+              <span><strong>ASK</strong><small>Amplitude changes</small></span>
+              <i aria-hidden="true"></i>
+            </button>
+            <button class="select-option" type="button" role="menuitemradio" aria-checked="false" data-mode="fsk">
+              <span><strong>FSK</strong><small>Frequency changes</small></span>
+              <i aria-hidden="true"></i>
+            </button>
+            <button class="select-option" type="button" role="menuitemradio" aria-checked="false" data-mode="psk">
+              <span><strong>PSK</strong><small>Phase flips</small></span>
+              <i aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+        <p class="help">Choose which wave property carries the 0s and 1s.</p>
+      </div>
+
+      <div class="field">
+        <label for="zoom">Zoom into bits</label>
+        <input id="zoom" type="range" min="3" max="18" value="7" />
+        <p class="help"><span id="zoomLabel">7</span> bits visible. Lower number means closer view.</p>
+      </div>
+    </section>
+
+    <section class="panel bands-panel" aria-labelledby="bandsTitle">
+      <div class="section-heading">
+        <p class="section-label">Choose a Wi-Fi comparison</p>
+        <h2 id="bandsTitle">A wider channel gives the signal more room</h2>
+        <p>These controlled examples keep modulation and signal quality equal. They compare channel width, not the GHz number alone.</p>
+      </div>
+
+      <div class="band-grid grid-3" role="group" aria-label="Wi-Fi band comparison">
+        <button class="band-card is-active" type="button" data-band="2.4" aria-pressed="true">
+          <span class="band-topline">
+            <strong>2.4 GHz</strong>
+            <span>20 MHz example</span>
+          </span>
+          <span class="lane-meter lanes-1" aria-hidden="true"><i></i></span>
+          <span class="band-rate">1x relative bandwidth</span>
+          <span class="band-detail">Usually the best reach, but a smaller and often crowded Wi-Fi band.</span>
+        </button>
+
+        <button class="band-card" type="button" data-band="5" aria-pressed="false">
+          <span class="band-topline">
+            <strong>5 GHz</strong>
+            <span>80 MHz example</span>
+          </span>
+          <span class="lane-meter lanes-4" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="band-rate">4x relative bandwidth</span>
+          <span class="band-detail">More wide-channel options and typically less range than 2.4 GHz.</span>
+        </button>
+
+        <button class="band-card" type="button" data-band="6" aria-pressed="false">
+          <span class="band-topline">
+            <strong>6 GHz</strong>
+            <span>160 MHz example</span>
+          </span>
+          <span class="lane-meter lanes-8" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          <span class="band-rate">8x relative bandwidth</span>
+          <span class="band-detail">Large contiguous spectrum supports wide, clean channels; practical range is usually shorter.</span>
+        </button>
+      </div>
+
+      <p class="note comparison-note"><strong>Important:</strong> every band can use multiple channel widths. These are representative comparison settings, not fixed limits. Wi-Fi 7 can use channels up to 320 MHz where regulations and equipment allow.</p>
+    </section>
+
+    <section class="panel signal-panel">
+      <div class="panel-head">
+        <div>
+          <p class="section-label">Message in motion</p>
+          <h2>Data-modulated wave</h2>
+          <p>Each shaded slice is one bit. Long messages continuously scroll so every byte moves through the link.</p>
+        </div>
+        <button id="pauseBtn" class="button button-primary" type="button">Pause</button>
+      </div>
+      <div class="signal-meta" aria-live="polite">
+        <span id="bandStatus" class="pill">2.4 GHz</span>
+        <span id="bandwidthStatus" class="pill">20 MHz channel</span>
+        <span id="messageStatus" class="pill">16 bits looping</span>
+      </div>
+      <canvas id="dataCanvas" width="1200" height="380" aria-label="Animated modulated radio signal"></canvas>
+      <div class="canvas-notes">
+        <span><i class="key key-one"></i>Bit 1</span>
+        <span><i class="key key-zero"></i>Bit 0</span>
+        <span>Carrier cycles are visually compressed; GHz cannot be drawn literally at screen scale.</span>
+      </div>
+    </section>
+
+    <section class="panel bits-panel">
+      <div class="panel-head">
+        <div>
+          <p class="section-label">Message bytes</p>
+          <h2>UTF-8 binary data</h2>
+          <p>Text is encoded as UTF-8 bytes, then each byte becomes 8 bits for transmission.</p>
+        </div>
+        <button id="clearBtn" class="button button-secondary" type="button">Clear</button>
+      </div>
+      <div id="bitsOutput" class="bits-output" aria-live="polite"></div>
+    </section>
+
+    <article class="research-note">
+      <h3>Research basis</h3>
+      <p>Shannon's channel-capacity result connects usable data rate to bandwidth and signal-to-noise ratio. The FCC opened 1,200 MHz from 5.925 to 7.125 GHz for unlicensed use in the United States, creating room for more wide channels. IEEE documents the progression from 160 MHz channels in Wi-Fi 6 to 320 MHz channels in Wi-Fi 7.</p>
+      <div class="source-links">
+        <a href="https://onlinelibrary.wiley.com/doi/10.1002/j.1538-7305.1948.tb00917.x" target="_blank" rel="noreferrer">Shannon, 1948</a>
+        <a href="https://docs.fcc.gov/public/attachments/FCC-20-51A1.pdf" target="_blank" rel="noreferrer">FCC 6 GHz order</a>
+        <a href="https://standards.ieee.org/beyond-standards/the-evolution-of-wi-fi-technology-and-standards/" target="_blank" rel="noreferrer">IEEE Wi-Fi evolution</a>
+        <a href="https://www.itu.int/rec/R-REC-P.525-5-202411-I/en" target="_blank" rel="noreferrer">ITU propagation model</a>
+      </div>
+    </article>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
