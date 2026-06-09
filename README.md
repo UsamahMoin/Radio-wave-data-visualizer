@@ -2,19 +2,7 @@
 
 A research-backed interactive website that shows moving digital data on a modulated radio signal and explains the difference between carrier frequency and channel bandwidth.
 
-## Repository
-
-This project is published from:
-
-```text
-https://github.com/UsamahMoin/Radio-wave-data-visualizer
-```
-
-The live GitHub Pages site is:
-
-```text
-https://usamahmoin.github.io/Radio-wave-data-visualizer/
-```
+Live Page: https://usamahmoin.github.io/Radio-Wave-Data-Visualizer/
 
 ## Features
 
